@@ -1,12 +1,12 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 const getData = async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -19,6 +19,19 @@ const getData = async () => {
 export default async function Home() {
   const data = await getData();
   console.log(data);
+
+  const renderData = () => {
+    return (
+      data &&
+      data.map((item: any, index: number) => (
+        <TableRow key={index}>
+          <TableCell className="font-medium">{item?.id}</TableCell>
+          <TableCell>{item?.userId}</TableCell>
+          <TableCell><Link href={`/${item?.id}`}>{item?.title}</Link></TableCell>
+        </TableRow>
+      ))
+    );
+  };
   return (
     <main>
       <Table>
@@ -30,16 +43,7 @@ export default async function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data &&
-            data.map((item: any, index: number) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{item?.id}</TableCell>
-                  <TableCell>{item?.userId}</TableCell>
-                  <TableCell>{item?.title}</TableCell>
-                </TableRow>
-              );
-            })}
+        {renderData()}
         </TableBody>
       </Table>
     </main>
